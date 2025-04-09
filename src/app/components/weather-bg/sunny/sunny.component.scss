@@ -1,0 +1,249 @@
+.background-container {
+  background: #ffffff;
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+}
+
+.background-container {
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex: 1;
+  position: relative;
+  background: linear-gradient(to bottom, #b9dfff, #4ba0db, #004390);
+  overflow: hidden;
+}
+.front,
+.middle,
+.back {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 60em;
+  width: 100%;
+}
+.front {
+  z-index: 3;
+}
+.middle {
+  z-index: 2;
+}
+.back {
+  z-index: 1;
+}
+
+.sun-rays {
+  position: absolute;
+  bottom: calc(60vh - 2.5em);
+  right: 18em;
+  height: 10em;
+  width: 10em;
+  z-index: -5;
+  background: radial-gradient(
+    rgba(255, 237, 175, 0.8) 50%,
+    rgba(255, 237, 175, 0.2) 70%
+  );
+  border-radius: 50%;
+  box-shadow: 0 0 0.5em rgba(255, 237, 175, 1);
+  -webkit-animation: rays 10s infinite;
+  -moz-animation: rays 10s infinite;
+  animation: rays 10s infinite;
+}
+.sun {
+  position: absolute;
+  bottom: 60vh;
+  right: 20.5em;
+  height: 5em;
+  width: 5em;
+  z-index: -5;
+  background: rgba(255, 237, 175, 1);
+  border-radius: 50%;
+  box-shadow: 0 0 1em rgba(255, 237, 175, 0.5), inset 0 0 0.5em #ffffad;
+}
+
+.cloud.one {
+  position: absolute;
+  top: 15em;
+  left: 5em;
+  z-index: 2;
+  -webkit-animation: moveCloud 35s linear infinite;
+  -moz-animation: moveCloud 35s linear infinite;
+  animation: moveCloud 35s linear infinite;
+
+  -webkit-transform: scale(0.7);
+  -moz-transform: scale(0.7);
+  transform: scale(0.7);
+}
+.cloud.two {
+  position: absolute;
+  left: 10em;
+  top: 20em;
+  z-index: -2;
+  -webkit-animation: moveCloud 45s infinite linear;
+  -moz-animation: moveCloud 45s infinite linear;
+  animation: moveCloud 45s infinite linear;
+
+  -webkit-transform: scale(0.9);
+  -moz-transform: scale(0.9);
+  transform: scale(0.9);
+}
+.cloud-body {
+  position: absolute;
+  top: 10em;
+  background: #ffffff;
+  box-shadow: inset 0 0.3em 0.5em lightyellow, 0 0 0.5em #ffffff;
+  height: 9em;
+  width: 30em;
+  border-radius: 10em;
+}
+.cloud-top {
+  position: absolute;
+  top: 4em;
+  left: 3em;
+  background: #ffffff;
+  box-shadow: inset 0 0.3em 0.5em lightyellow, 0 0 0.5em #ffffff;
+  height: 13em;
+  width: 12em;
+  border-radius: 10em 10em 10% 30%;
+}
+.cloud-puff {
+  position: absolute;
+  top: 6em;
+  left: 11em;
+  background: #ffffff;
+  box-shadow: inset 0 0.3em 0.5em lightyellow, 0 0 0.5em #ffffff;
+  height: 12em;
+  width: 12em;
+  border-radius: 50%;
+}
+
+/*Cloud Animation*/
+@-webkit-keyframes moveCloud {
+  0% {
+    left: -25em;
+  }
+  100% {
+    left: 50em;
+  }
+}
+
+@-moz-keyframes moveCloud {
+  0% {
+    left: -25em;
+  }
+  100% {
+    left: 50em;
+  }
+}
+
+@keyframes moveCloud {
+  0% {
+    left: -25em;
+  }
+  100% {
+    left: 100em;
+  }
+}
+
+/*Sun Animation*/
+@-webkit-keyframes rays {
+  0% {
+    transform: scale(1.1);
+  }
+  25% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  75% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+@-moz-keyframes rays {
+  0% {
+    transform: scale(1.1);
+  }
+  25% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  75% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes rays {
+  0% {
+    transform: scale(1.1);
+  }
+  25% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  75% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+/*Balloon Animation*/
+@-webkit-keyframes flow {
+  0% {
+    transform: rotate(20deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(20deg);
+  }
+}
+
+@-moz-keyframes flow {
+  0% {
+    transform: rotate(10deg);
+    transform-origin: bottom;
+  }
+  50% {
+    transform: rotate(0deg);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: rotate(10deg);
+    transform-origin: bottom;
+  }
+}
+
+@keyframes flow {
+  0% {
+    transform: rotate(10deg);
+    transform-origin: bottom;
+  }
+  50% {
+    transform: rotate(0deg);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: rotate(10deg);
+    transform-origin: bottom;
+  }
+}
+
+/*String Animation*/

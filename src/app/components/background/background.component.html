@@ -1,0 +1,39 @@
+<div id="background-wrap" [style.background]="bgColor">
+  <div *ngIf="!isDarkTheme" @fadeInOut>
+    <span class="sun-rays"></span>
+    <span class="sun"></span>
+  </div>
+
+  <div *ngIf="isDarkTheme" @fadeInOut>
+    <span class="moon"></span>
+    <span class="moon-rays"></span>
+  </div>
+
+  <div *ngIf="isDarkTheme" style="z-index: -1;" @fadeInOut>
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+  </div>
+  <div >
+    <div class="x1">
+        <div class="cloud"></div>
+      </div>
+    
+      <div class="x2">
+        <div class="cloud"></div>
+      </div>
+    
+      <div class="x3">
+        <div class="cloud"></div>
+      </div>
+    
+      <div class="x4">
+        <div class="cloud"></div>
+      </div>
+    
+      <div class="x5">
+        <div class="cloud"></div>
+      </div>
+  </div>
+  <!-- <div id="foglayer_01" class="fog"> -->
+</div>
