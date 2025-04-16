@@ -10,6 +10,7 @@ import { BackgroundComponent } from './components/background/background.componen
 import { SunnyComponent } from './components/weather-bg/sunny/sunny.component';
 import { NavbarComponent } from './common/navbar/navbar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,9 +19,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BackgroundComponent,
     SunnyComponent,
     NavbarComponent,
-      ],
+  ],
   imports: [
     BrowserModule,
+    FontAwesomeModule,
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule

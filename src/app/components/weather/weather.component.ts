@@ -10,6 +10,22 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../src/environments/environment';
 import { LocationService } from '../../services/location.service';
 import { BgService } from '../../services/bg.service';
+// weather-properties.ts
+import {
+  faTint,
+  faCompressArrowsAlt,
+  faMountain,
+  faWind,
+  faAngleDoubleUp,
+  faLocationArrow
+} from '@fortawesome/free-solid-svg-icons';
+import { WeatherProperty } from '../../services/weather-property.model';
+import { map } from '@tomtom-international/web-sdk-maps';
+import { faEllipsisH, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+
+
+
+
 
 @Component({
   selector: 'app-weather',
@@ -19,6 +35,9 @@ import { BgService } from '../../services/bg.service';
   encapsulation: ViewEncapsulation.Emulated
 })
 export class WeatherComponent implements OnInit {
+  ellipsisH = faEllipsisH;
+ellipsisV = faEllipsisV;
+  weatherProperties: Record<string, WeatherProperty> = {};
   city = 'goa';
   weatherData: any;
   coords: { lat: number; lon: number } | null = null;
@@ -65,11 +84,66 @@ export class WeatherComponent implements OnInit {
     this.bgService.setTheme(this.theme);
   }
 
+  mapData(data:any){
+    this.weatherProperties = {
+      humidity: {
+        prop: 'Humidity',
+        icon: faTint,
+        units: '%',
+        value: data.main.humidity
+      },
+      pressure: {
+        prop: 'Pressure',
+        icon: faCompressArrowsAlt,
+        units: 'hPa',
+        value: data.main.pressure
+      },
+      groundLevel: {
+        prop: 'Ground Level',
+        icon: faMountain,
+        units: 'm',
+        value: data.main.grnd_level
+      },
+      windSpeed: {
+        prop: 'Wind Speed',
+        icon: faWind,
+        units: 'm/s',
+        value: data.wind.speed
+      },
+      windGust: {
+        prop: 'Wind Gust',
+        icon: faAngleDoubleUp,
+        units: 'm/s',
+        value: data.wind.gust
+      },
+      windDegree: {
+        prop: 'Wind Degree',
+        icon: faLocationArrow,
+        units: '°',
+        value: data.wind.deg
+      }
+    };
+    console.log(this.weatherProperties);
+    
+
+  }
+  getWindDirection(degree: number): string {
+    const directions = [
+      'N', 'NNE', 'NE', 'ENE',
+      'E', 'ESE', 'SE', 'SSE',
+      'S', 'SSW', 'SW', 'WSW',
+      'W', 'WNW', 'NW', 'NNW'
+    ];
+    const index = Math.round(degree / 22.5) % 16;
+    return directions[index];
+  }
+
   searchByCity() {
     if (this.city.trim()) {
       this.weatherService.getWeatherByCity(this.city).subscribe(
         (data) => {
           this.weatherData = data;
+          this.mapData(data)
           this.offset = this.weatherData.timezone;
           this.localTime = this.getLocalTime();
           this.locationError = '';
@@ -176,6 +250,19 @@ export class WeatherComponent implements OnInit {
       day: '2-digit',
     });
   }
+  getRelativeTime(unixSeconds: number): string {
+    const target = new Date(unixSeconds * 1000);
+    const now = new Date();
+    const diff = target.getTime() - now.getTime();
+  
+    const minutes = Math.floor(Math.abs(diff) / (1000 * 60)) % 60;
+    const hours = Math.floor(Math.abs(diff) / (1000 * 60 * 60));
+  
+    if (diff < -60000) return `${hours}h ${minutes}m ago`;
+    if (diff > 60000) return `in ${hours}h ${minutes}m`;
+    return 'now';
+  }
+  
 
   ngOnDestroy() {
     this.stopClock();

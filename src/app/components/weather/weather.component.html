@@ -1,72 +1,113 @@
-<div
-  class="container-fluid d-flex flex-column flex-md-row justify-content-center px-0 align-items-start"
-  style="height: 100vh; overflow-y: auto"
->
+<div class="container-fluid d-flex flex-column flex-md-row justify-content-center px-0 align-items-start"
+  style="height: 100vh; overflow-y: auto">
   <div class="row glass-box w-100 mx-0 flex-grow-1 flex-column flex-md-row min-vh-100">
     <!-- Left Panel -->
     <div
-      class="col-12 col-md-4 p-3 d-flex flex-column weather-db border-bottom border-md-end border-white border-opacity-10 left-panel"
-    >
+      class="col-12 col-md-4 p-3 d-flex flex-column weather-db border-bottom border-md-end border-white border-opacity-10 left-panel">
       <!-- Search Bar -->
-      <div class="d-flex mb-3 align-items-center">
-        <input
-          type="text"
-          [(ngModel)]="city"
-          class="form-control text-dark"
-          placeholder="Search for a city"
-          autocomplete="off"
-          (keyup.enter)="searchByCity()"
-        />
-        <button
-          class="btn btn-light ms-2"
-          (click)="searchByCity()"
-          style="width: 40px; height: 40px"
-        >
+      <div class="d-flex  align-items-center mb-auto">
+        <input type="text" [(ngModel)]="city" class="form-control text-dark" placeholder="Search for a city"
+          autocomplete="off" (keyup.enter)="searchByCity()" />
+        <button class="btn btn-light ms-2" (click)="searchByCity()" style="width: 40px; height: 40px">
           <i class="fas fa-search"></i>
         </button>
-        <button
-          class="btn btn-light ms-2"
-          (click)="useMyLocation()"
-          style="width: 40px; height: 40px"
-        >
+        <button class="btn btn-light ms-2" (click)="useMyLocation()" style="width: 40px; height: 40px">
           <i class="fas fa-location"></i>
         </button>
       </div>
 
       <!-- Weather Info -->
-      <div class="mb-auto" *ngIf="weatherData">
-        <h5>{{ weatherData.name }}, {{ weatherData.sys.country }}</h5>
-        <h1 class="display-4 fw-medium">{{ weatherData.main.temp }} °C</h1>
-        <div class="d-flex gap-3 pb-3">
-          <div><i class="fa fa-arrow-up"></i> {{ weatherData.main.temp_max }} °</div>
-          <div><i class="fa fa-arrow-down"></i> {{ weatherData.main.temp_min }} °</div>
-        </div>
+      <div class="" *ngIf="weatherData">
+        <div class="d-flex flex-column gap-2 my-4">
+          <h5 class="mb-0">{{ weatherData.name }}, {{ weatherData.sys.country }}</h5>
+          <h1 class="display-4 fw-medium">{{ weatherData.main.temp }} °C</h1>
+          <div class="d-flex gap-3">
+            <div><i class="fa fa-arrow-up"></i> {{ weatherData.main.temp_max }} °</div>
+            <div><i class="fa fa-arrow-down"></i> {{ weatherData.main.temp_min }} °</div>
+            <div>Feels Like {{ weatherData.main.feels_like }} °</div>
 
-        <div class="d-block d-md-none mb-3 order-0">
-          <h1 class="display-1 fw-bold text-capitalize text-center mb-3">
-            {{ weatherData.weather[0].description }}
-          </h1>
-          <div class="p-2 text-center d-md-none d-block">
-            <p class="mb-0">
-              {{
-                weatherData.weather[0].description.charAt(0).toUpperCase() +
-                weatherData.weather[0].description.slice(1)
-              }}
-              with a high of {{ weatherData.main.temp_max }} °C and a low of
-              {{ weatherData.main.temp_min }} °C. Feels like
-              {{ weatherData.main.feels_like }} °C. Wind speed at
-              {{ weatherData.wind.speed }} km/h from {{ weatherData.wind.deg }} °,
-              gusting up to {{ weatherData.wind.gust }} km/h. Pressure at
-              {{ weatherData.main.pressure }} hpa. Humidity {{
-                weatherData.main.humidity
-              }}%.
-            </p>
           </div>
         </div>
 
-        <!-- Conditions -->
-        <div class="d-flex my-4 p-3 rounded-4 bg-light bg-opacity-25 flex-wrap">
-          
+
+
+        <div class="container-fluid px-0">
+          <div class="row row-cols-sm-2 row-cols-lg-3 g-3">
+            <div class="col" *ngFor="let item of weatherProperties | keyvalue">
+              <div class=" text-dark rounded-4 h-100 p-3" style="background: #acb6e5;  /* fallback for old browsers */
+              background: -webkit-linear-gradient(to right, #86fde8, #acb6e5);  /* Chrome 10-25, Safari 5.1-6 */
+              background: linear-gradient(to right, #86fde8, #acb6e5);box-shadow: 0px 8px 16px 0px rgb(0 0 0 / 3%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+              ">
+                <div class="d-flex justify-content-between align-items-start">
+                  <h5><fa-icon [icon]="item.value.icon"></fa-icon></h5>
+                  <fa-icon [icon]="ellipsisV"></fa-icon>
+
+                </div>
+                <div class="d-flex justify-content-between align-items-center py-2">
+                  <h6 class="card-title mb-0 text-muted" style="font-size: small;">{{ item.value.prop }}</h6>
+                </div>
+                <div class="d-flex align-items-end">
+                  <div class="d-inline-flex align-items-baseline">
+                    <span class="fs-4 fw-bold">{{ item.value.value }}</span>
+                    <span class="ms-1 fs-6 fw-medium">{{ item.value.units }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid px-0 mt-3">
+          <div class="row row-cols-sm-2 row-cols-lg-2 g-3">
+            <div class="col">
+              <div class=" text-dark rounded-4 h-100 p-3" style="background: linear-gradient(45deg, #ff8f8f , #fffc99 );box-shadow: 0px 8px 16px 0px rgb(0 0 0 / 3%);">
+                <div class="d-flex justify-content-between align-items-start">
+                  <h5 class="fs-6">SUN RISE</h5>
+                  <!-- <h5><fa-icon [icon]=""></fa-icon></h5> -->
+                  <i class="wi wi-sunrise"></i>
+                </div>
+
+                <div class="d-inline-flex align-items-baseline">
+                  <span class="fs-1 fw-bold">{{ weatherData.sys.sunrise * 1000 |
+                    date : "HH:mm" }}</span>
+                  <span class="ms-1 fs-6 fw-medium"></span>
+                </div>
+                <div class="d-flex align-items-end">
+                  <div class="d-inline-flex align-items-baseline">
+                    <span class="fw-bold" style="font-size: small;">{{ getRelativeTime(weatherData.sys.sunrise) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="text-light rounded-4 h-100 p-3" style="background: #0B486B;
+              background: linear-gradient(
+                to right,
+                #0B486B,#F56217
+              );">
+                <div class="d-flex justify-content-between align-items-start">
+                  <h5 class="fs-6">SUN SET</h5>
+                  <!-- <h5><fa-icon [icon]=""></fa-icon></h5> -->
+                  <i class="wi wi-sunset"></i>
+                </div>
+
+                <div class="d-inline-flex align-items-baseline">
+                  <span class="fs-1 fw-bold">{{ weatherData.sys.sunset * 1000 | date : "HH:mm" }}</span>
+                  <span class="ms-1 fs-6 fw-medium"></span>
+                </div>
+                <div class="d-flex align-items-end">
+                  <div class="d-inline-flex align-items-baseline">
+                    <span class="fw-bold" style="font-size: small;">{{ getRelativeTime(weatherData.sys.sunset) }}</span>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- <div class="d-flex my-4 p-3 rounded-4 bg-light bg-opacity-25 flex-wrap">
+
           <div class="text-center col-4 border-end">
             <h6>Humidity</h6>
             <h5>{{ weatherData.main.humidity }}%</h5>
@@ -79,22 +120,20 @@
             <h6>Pressure</h6>
             <h5>{{ weatherData.main.pressure }} hpa</h5>
           </div>
-        </div>
+        </div> -->
 
         <!-- Sunrise/Sunset -->
-        <div class="d-flex flex-row justify-content-between pt-4">
+        <!-- <div class="d-flex flex-row justify-content-between my-4">
           <div class="text-center">
-            <div
-              class="d-flex justify-content-center mb-2 align-items-center rounded-circle bg-primary text-white"
-              style="width: 50px; height: 50px"
-            >
+            <div class="d-flex justify-content-center mb-2 align-items-center rounded-circle bg-primary text-white"
+              style="width: 50px; height: 50px">
               <i class="wi wi-sunrise"></i>
             </div>
             <h6>{{ weatherData.sys.sunrise * 1000 | date : "HH:mm" }}</h6>
             <h6>
               {{
-                (weatherData.timezone + weatherData.sys.sunrise) * 1000
-                  | date : "HH:mm"
+              (weatherData.timezone + weatherData.sys.sunrise) * 1000
+              | date : "HH:mm"
               }}
             </h6>
           </div>
@@ -105,21 +144,19 @@
           </div>
 
           <div class="text-center">
-            <div
-              class="d-flex justify-content-center mb-2 align-items-center rounded-circle bg-primary text-white"
-              style="width: 50px; height: 50px"
-            >
+            <div class="d-flex justify-content-center mb-2 align-items-center rounded-circle bg-primary text-white"
+              style="width: 50px; height: 50px">
               <i class="wi wi-sunset"></i>
             </div>
             <h6>{{ weatherData.sys.sunset * 1000 | date : "HH:mm" }}</h6>
             <h6>
               {{
-                (weatherData.sys.sunset + weatherData.timezone) * 1000
-                  | date : "HH:mm"
+              (weatherData.sys.sunset + weatherData.timezone) * 1000
+              | date : "HH:mm"
               }}
             </h6>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!-- <div class="bg-opacity-25 bg-light mt-4 rounded-4 p-2 text-center">
@@ -128,7 +165,7 @@
     </div>
 
     <!-- Right Panel -->
-    <div class="col-12 col-md-8 p-3 right-panel d-none d-md-block" *ngIf="weatherData">
+    <div class="col-12 col-md-8 p-3 right-panel" *ngIf="weatherData">
       <div class="d-flex flex-column h-100 justify-content-start">
         <div class="d-flex justify-content-end w-100 mb-3">
           <app-navbar></app-navbar>
@@ -139,7 +176,6 @@
           <h1 class="fw-bold text-end">{{ countryTime }}</h1>
         </div>
 
-        <!-- Description (Right Panel) visible only on md and up -->
         <div class="px-2 mt-3 text-center text-md-end">
           <h1 class="display-5 fw-normal text-capitalize">
             {{ weatherData.weather[0].description }}
@@ -149,8 +185,8 @@
         <div class="p-2 text-end">
           <p class="mb-0">
             {{
-              weatherData.weather[0].description.charAt(0).toUpperCase() +
-              weatherData.weather[0].description.slice(1)
+            weatherData.weather[0].description.charAt(0).toUpperCase() +
+            weatherData.weather[0].description.slice(1)
             }}
             with a high of {{ weatherData.main.temp_max }} °C and a low of
             {{ weatherData.main.temp_min }} °C. Feels like
@@ -158,7 +194,7 @@
             {{ weatherData.wind.speed }} km/h from {{ weatherData.wind.deg }} °,
             gusting up to {{ weatherData.wind.gust }} km/h. Pressure at
             {{ weatherData.main.pressure }} hpa. Humidity {{
-              weatherData.main.humidity
+            weatherData.main.humidity
             }}%.
           </p>
         </div>
