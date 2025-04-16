@@ -19,7 +19,7 @@ import { BgService } from '../../services/bg.service';
   encapsulation: ViewEncapsulation.Emulated
 })
 export class WeatherComponent implements OnInit {
-  city = 'Goa';
+  city = 'goa';
   weatherData: any;
   coords: { lat: number; lon: number } | null = null;
   rise: any;
@@ -39,6 +39,16 @@ export class WeatherComponent implements OnInit {
   suggestions: any[] = [];
   theme: 'light' | 'dark' = 'light';
 
+  hourlyData = [
+    { time: '12:00', icon: 'wi wi-day-sunny', temp: 28 },
+    { time: '13:00', icon: 'wi wi-day-cloudy', temp: 29 },
+    { time: '14:00', icon: 'wi wi-cloud', temp: 27 },
+    { time: '15:00', icon: 'wi wi-rain', temp: 25 },
+    { time: '16:00', icon: 'wi wi-thunderstorm', temp: 24 },
+    { time: '17:00', icon: 'wi wi-night-clear', temp: 22 },
+  ];
+  
+
   @ViewChild('searchBox') searchBox!: ElementRef;
 
   constructor(
@@ -51,7 +61,7 @@ export class WeatherComponent implements OnInit {
     this.searchByCity();
   }
   setThemeBasedOnTime(): void {
-    this.theme = this.hour >= 8 && this.hour < 17 ? 'light' : 'dark';
+    this.theme = this.hour >= 6 && this.hour < 18 ? 'light' : 'dark';
     this.bgService.setTheme(this.theme);
   }
 
