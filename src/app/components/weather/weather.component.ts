@@ -19,8 +19,8 @@ import {
   faAngleDoubleUp,
   faLocationArrow
 } from '@fortawesome/free-solid-svg-icons';
-import { WeatherProperty } from '../../services/weather-property.model';
-import { map } from '@tomtom-international/web-sdk-maps';
+// import { WeatherAPIResponse } from '../../services/weather-property.model';
+// import { map } from '@tomtom-international/web-sdk-maps';
 import { faEllipsisH, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 
 
@@ -37,8 +37,8 @@ import { faEllipsisH, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 export class WeatherComponent implements OnInit {
   ellipsisH = faEllipsisH;
 ellipsisV = faEllipsisV;
-  weatherProperties: Record<string, WeatherProperty> = {};
-  city = 'goa';
+  weatherProperties: any[] = [];
+  city = '';
   weatherData: any;
   coords: { lat: number; lon: number } | null = null;
   rise: any;
@@ -57,6 +57,13 @@ ellipsisV = faEllipsisV;
   localOffset: any;
   suggestions: any[] = [];
   theme: 'light' | 'dark' = 'light';
+
+  faTint = faTint;
+  faCompressArrowsAlt = faCompressArrowsAlt;
+  faMountain = faMountain;
+  faWind = faWind;
+  faAngleDoubleUp = faAngleDoubleUp;
+  faLocationArrow = faLocationArrow;
 
   hourlyData = [
     { time: '12:00', icon: 'wi wi-day-sunny', temp: 28 },
@@ -85,45 +92,14 @@ ellipsisV = faEllipsisV;
   }
 
   mapData(data:any){
-    this.weatherProperties = {
-      humidity: {
-        prop: 'Humidity',
-        icon: faTint,
-        units: '%',
-        value: data.main.humidity
-      },
-      pressure: {
-        prop: 'Pressure',
-        icon: faCompressArrowsAlt,
-        units: 'hPa',
-        value: data.main.pressure
-      },
-      groundLevel: {
-        prop: 'Ground Level',
-        icon: faMountain,
-        units: 'm',
-        value: data.main.grnd_level
-      },
-      windSpeed: {
-        prop: 'Wind Speed',
-        icon: faWind,
-        units: 'm/s',
-        value: data.wind.speed
-      },
-      windGust: {
-        prop: 'Wind Gust',
-        icon: faAngleDoubleUp,
-        units: 'm/s',
-        value: data.wind.gust
-      },
-      windDegree: {
-        prop: 'Wind Degree',
-        icon: faLocationArrow,
-        units: '°',
-        value: data.wind.deg
-      }
-    };
-    console.log(this.weatherProperties);
+    this.weatherProperties = [
+      { label: 'Humidity', icon: this.faTint, units: '%', value: data.main.humidity },
+      { label: 'Pressure', icon: this.faCompressArrowsAlt, units: 'hPa', value: data.main.pressure },
+      { label: 'Ground Level', icon: this.faMountain, units: 'm', value: data.main.grnd_level },
+      { label: 'Wind Speed', icon: this.faWind, units: 'm/s', value: data.wind.speed },
+      { label: 'Wind Gust', icon: this.faAngleDoubleUp, units: 'm/s', value: data.wind.gust },
+      { label: 'Wind Degree', icon: this.faLocationArrow, units: '°', value: data.wind.deg }
+    ].filter(item => item.value !== undefined);
     
 
   }
@@ -144,6 +120,7 @@ ellipsisV = faEllipsisV;
         (data) => {
           this.weatherData = data;
           this.mapData(data)
+
           this.offset = this.weatherData.timezone;
           this.localTime = this.getLocalTime();
           this.locationError = '';
@@ -162,6 +139,8 @@ ellipsisV = faEllipsisV;
     this.weatherService.getWeatherByCoords(lat, lon).subscribe(
       (data) => {
         this.weatherData = data;
+        this.mapData(data)
+
         this.offset = this.weatherData.timezone;
         this.localTime = this.getLocalTime();
         this.startClock();

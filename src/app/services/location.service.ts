@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../src/environments/environment';
 import { Observable } from 'rxjs';
+import { WeatherAPIResponse } from '../services/weather-property.model';
+
 
 @Injectable({
   providedIn: 'root',
@@ -14,12 +16,12 @@ export class LocationService {
 
   getWeatherByCity(city: string) {
     const url = `${this.baseUrl}?q=${city}&units=metric&appid=${this.apiKey}`;
-    return this.http.get(url);
+    return this.http.get<WeatherAPIResponse>(url);
   }
 
   getWeatherByCoords(lat: number, lon: number) {
     const url = `${this.baseUrl}?lat=${lat}&lon=${lon}&units=metric&appid=${this.apiKey}`;
-    return this.http.get(url);
+    return this.http.get<WeatherAPIResponse>(url);
   }
 
   searchCities(query: string): Observable<any> {
