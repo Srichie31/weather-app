@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../src/environments/environment';
 import { LocationService } from '../../services/location.service';
 import { BgService } from '../../services/bg.service';
+
 // weather-properties.ts
 import {
   faTint,
@@ -22,6 +23,9 @@ import {
 // import { WeatherAPIResponse } from '../../services/weather-property.model';
 // import { map } from '@tomtom-international/web-sdk-maps';
 import { faEllipsisH, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { of, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+declare const bootstrap: any;
 
 
 
@@ -36,7 +40,7 @@ import { faEllipsisH, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 })
 export class WeatherComponent implements OnInit {
   ellipsisH = faEllipsisH;
-ellipsisV = faEllipsisV;
+  ellipsisV = faEllipsisV;
   weatherProperties: any[] = [];
   city = '';
   weatherData: any;
@@ -55,7 +59,6 @@ ellipsisV = faEllipsisV;
     sunset: '',
   };
   localOffset: any;
-  suggestions: any[] = [];
   theme: 'light' | 'dark' = 'light';
 
   faTint = faTint;
@@ -65,6 +68,10 @@ ellipsisV = faEllipsisV;
   faAngleDoubleUp = faAngleDoubleUp;
   faLocationArrow = faLocationArrow;
 
+  suggestions: any[] = [];
+  selectedPlace: any = null;
+  @ViewChild('searchBox') searchBox!: ElementRef;
+
   hourlyData = [
     { time: '12:00', icon: 'wi wi-day-sunny', temp: 28 },
     { time: '13:00', icon: 'wi wi-day-cloudy', temp: 29 },
@@ -73,25 +80,54 @@ ellipsisV = faEllipsisV;
     { time: '16:00', icon: 'wi wi-thunderstorm', temp: 24 },
     { time: '17:00', icon: 'wi wi-night-clear', temp: 22 },
   ];
-  
 
-  @ViewChild('searchBox') searchBox!: ElementRef;
 
+
+  private searchSubject = new Subject<string>();
   constructor(
     private bgService: BgService,
     private weatherService: LocationService
-  ) {}
+  ) {
+
+  }
 
   ngOnInit(): void {
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(query => {
+        if (query.length > 2) {
+          return this.weatherService.searchPlaces(query);
+        } else {
+          return []; // If the query is too short, return an empty array
+        }
+      })
+    ).subscribe(data => {
+      this.suggestions = data; // Update the suggestions array
+      
+    });
     this.localOffset = new Date().getTimezoneOffset() * 60000;
     this.searchByCity();
+  }
+
+  message = 'Weather data is currently unavailable for this area.';
+
+  showToast(msg: string) {
+    this.message = msg;
+    
+    
+    const toastEl = document.getElementById('liveToast');
+    if (toastEl) {
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+    }
   }
   setThemeBasedOnTime(): void {
     this.theme = this.hour >= 6 && this.hour < 18 ? 'light' : 'dark';
     this.bgService.setTheme(this.theme);
   }
 
-  mapData(data:any){
+  mapData(data: any) {
     this.weatherProperties = [
       { label: 'Humidity', icon: this.faTint, units: '%', value: data.main.humidity },
       { label: 'Pressure', icon: this.faCompressArrowsAlt, units: 'hPa', value: data.main.pressure },
@@ -100,18 +136,34 @@ ellipsisV = faEllipsisV;
       { label: 'Wind Gust', icon: this.faAngleDoubleUp, units: 'm/s', value: data.wind.gust },
       { label: 'Wind Degree', icon: this.faLocationArrow, units: '°', value: data.wind.deg }
     ].filter(item => item.value !== undefined);
-    
+
 
   }
-  getWindDirection(degree: number): string {
-    const directions = [
-      'N', 'NNE', 'NE', 'ENE',
-      'E', 'ESE', 'SE', 'SSE',
-      'S', 'SSW', 'SW', 'WSW',
-      'W', 'WNW', 'NW', 'NNW'
-    ];
-    const index = Math.round(degree / 22.5) % 16;
-    return directions[index];
+  // getWindDirection(degree: number): string {
+  //   const directions = [
+  //     'N', 'NNE', 'NE', 'ENE',
+  //     'E', 'ESE', 'SE', 'SSE',
+  //     'S', 'SSW', 'SW', 'WSW',
+  //     'W', 'WNW', 'NW', 'NNW'
+  //   ];
+  //   const index = Math.round(degree / 22.5) % 16;
+  //   return directions[index];
+  // }
+
+  onSearchChange() {
+
+    if (this.city.length > 2) {
+      this.searchSubject.next(this.city);
+    } else {
+      this.suggestions = [];
+    }
+  }
+
+  selectPlace(place: any) {
+    this.selectedPlace = place;
+    this.city = `${place.name}, ${place.country}`; // Update the city with selected place
+    this.suggestions = []; // Clear suggestions after selecting a place
+    this.searchByCity()
   }
 
   searchByCity() {
@@ -120,16 +172,15 @@ ellipsisV = faEllipsisV;
         (data) => {
           this.weatherData = data;
           this.mapData(data)
-
           this.offset = this.weatherData.timezone;
           this.localTime = this.getLocalTime();
           this.locationError = '';
           this.startClock();
-          console.log(this.weatherData);
+          // console.log(this.weatherData);
         },
         (error) => {
-          this.weatherData = null;
           this.locationError = 'City not found.';
+          this.showToast(this.message);
           console.error('Error fetching city weather:', error);
         }
       );
@@ -140,14 +191,14 @@ ellipsisV = faEllipsisV;
       (data) => {
         this.weatherData = data;
         this.mapData(data)
-
         this.offset = this.weatherData.timezone;
         this.localTime = this.getLocalTime();
         this.startClock();
         this.locationError = '';
       },
       (error) => {
-        this.weatherData = null;
+        // this.weatherData = null;
+        this.showToast(this.message);
         this.locationError = 'Unable to fetch weather for your location.';
         console.error('Error fetching geo weather:', error);
       }
@@ -211,7 +262,7 @@ ellipsisV = faEllipsisV;
   }
 
   updateTime() {
-    this.setThemeBasedOnTime()      
+    this.setThemeBasedOnTime()
     const nowUTC = new Date(
       Date.now() + new Date().getTimezoneOffset() * 60000
     );
@@ -233,17 +284,19 @@ ellipsisV = faEllipsisV;
     const target = new Date(unixSeconds * 1000);
     const now = new Date();
     const diff = target.getTime() - now.getTime();
-  
+
     const minutes = Math.floor(Math.abs(diff) / (1000 * 60)) % 60;
     const hours = Math.floor(Math.abs(diff) / (1000 * 60 * 60));
-  
+
     if (diff < -60000) return `${hours}h ${minutes}m ago`;
     if (diff > 60000) return `in ${hours}h ${minutes}m`;
     return 'now';
   }
-  
+
 
   ngOnDestroy() {
     this.stopClock();
   }
 }
+
+

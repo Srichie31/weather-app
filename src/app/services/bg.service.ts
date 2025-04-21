@@ -18,7 +18,7 @@ export class BgService {
   }
 
   setTheme(mode: 'light' | 'dark') {
-    console.log(mode);
+    // console.log(mode);
     
     document.body.classList.remove('light-theme', 'dark-theme');
     document.body.classList.add(`${mode}-theme`);

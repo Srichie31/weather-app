@@ -1,20 +1,54 @@
 <div class="container-fluid  d-flex flex-column flex-md-row justify-content-center px-0 align-items-start"
   style="height: 100vh; overflow-y: auto">
+
+  <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+
+      <div class="d-flex">
+        <div class="toast-body text-dark">
+          <i class="fa-solid fa-circle-info"></i> Weather Unavailable
+
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <!-- <div class="toast-body text-dark">
+        {{message}}
+      </div> -->
+    </div>
+  </div>
+
   <div class="row  w-100 mx-0 flex-grow-1 flex-column flex-md-row min-vh-100">
     <!-- Left Panel -->
     <div
-      class="col-12 col-md-4 p-3 d-flex flex-column weather-db min-vh-100 border-bottom border-md-end border-white border-opacity-10 left-panel">
+      class="col-12  p-3 d-flex flex-column weather-db min-vh-100 border-bottom border-md-end border-white border-opacity-10 left-panel"
+      [ngClass]="weatherData? 'col-md-4 ':'col-md-12 justify-content-center'">
       <!-- Search Bar -->
-      <div class="d-flex  align-items-center">
-        <input type="text" [(ngModel)]="city" class="form-control text-dark" placeholder="Search for a city"
-          autocomplete="off" (keyup.enter)="searchByCity()" />
-        <button class="btn btn-light ms-2" (click)="searchByCity()" style="width: 40px; height: 40px">
+      <div class="d-flex search-bar align-items-center w-100" style="position: relative;">
+        <!-- Search Input -->
+        <div class="input-container h-100" style="width: 100%; position: relative;">
+          <!-- Search Input -->
+          <input type="text" [(ngModel)]="city" class="form-control text-dark" placeholder="Search for a city"
+            autocomplete="off" (keyup.enter)="searchByCity()" (input)="onSearchChange()" />
+
+          <!-- Suggestions List (hidden by default) -->
+          <ul *ngIf="suggestions.length" class="list-group suggestions-list">
+            <li *ngFor="let place of suggestions" class="list-group-item" (click)="selectPlace(place)">
+              <i class="fas fa-search me-2"></i> {{ place.name }}, {{ place.country }}
+            </li>
+          </ul>
+        </div>
+
+        <button class="btn btn-light ms-2" (click)="searchByCity()" style="width: 40px; height: 40px;">
           <i class="fas fa-search"></i>
         </button>
-        <button class="btn btn-light ms-2" (click)="useMyLocation()" style="width: 40px; height: 40px">
+
+        <button class="btn btn-light ms-2" (click)="useMyLocation()" style="width: 40px; height: 40px;">
           <i class="fas fa-location"></i>
         </button>
+
+
       </div>
+
 
       <div class="d-flex flex-column gap-2 my-4 mb-auto" *ngIf="weatherData">
         <!-- Bigger and medium screen -->
@@ -58,12 +92,9 @@
 
       <!-- Weather Info -->
       <div class="mt-3">
-
-
-
         <div class="container-fluid px-0" *ngIf="weatherData">
-          <div class="row row-cols-sm-2 row-cols-lg-3 g-3">
-            <div class="col" *ngFor="let item of weatherProperties | keyvalue">
+          <div class="row g-3">
+            <div class="col-md-4 col-6" *ngFor="let item of weatherProperties | keyvalue">
               <div class=" text-dark rounded-4 h-100 p-3" style="background: #acb6e5;  /* fallback for old browsers */
               background: -webkit-linear-gradient(to right, #86fde8, #acb6e5);  /* Chrome 10-25, Safari 5.1-6 */
               background: linear-gradient(to right, #86fde8, #acb6e5);box-shadow: 0px 8px 16px 0px rgb(0 0 0 / 3%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
@@ -71,10 +102,9 @@
                 <div class="d-flex justify-content-between align-items-start">
                   <h5><fa-icon [icon]="item.value.icon"></fa-icon></h5>
                   <fa-icon [icon]="ellipsisV"></fa-icon>
-
                 </div>
-                <div class="d-flex justify-content-between align-items-center py-2">
-                  <h6 class="card-title mb-0 text-muted" style="font-size: small;">{{ item.value.prop }}</h6>
+                <div class="d-flex justify-content-start align-items-center py-2">
+                  <h6 class="card-title mb-0 text-muted" style="font-size: small;">{{ item.value.label }}</h6>
                 </div>
                 <div class="d-flex align-items-end">
                   <div class="d-inline-flex align-items-baseline">
@@ -87,7 +117,7 @@
           </div>
         </div>
         <div class="container-fluid px-0 mt-3" *ngIf="weatherData">
-          <div class="row row-cols-sm-2 row-cols-lg-2 g-3" >
+          <div class="row row-cols-sm-2 row-cols-lg-2 g-3">
             <div class="col">
               <div class=" text-dark rounded-4 h-100 p-3"
                 style="background: linear-gradient(45deg, #ff8f8f , #fffc99 );box-shadow: 0px 8px 16px 0px rgb(0 0 0 / 3%);">
@@ -129,18 +159,13 @@
                 <div class="d-flex align-items-end">
                   <div class="d-inline-flex align-items-baseline">
                     <span class="fw-bold" style="font-size: small;">{{ getRelativeTime(weatherData.sys.sunset) }}</span>
-
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
-
       </div>
-
-
     </div>
 
     <!-- Right Panel -->

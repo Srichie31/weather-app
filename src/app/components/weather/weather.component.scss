@@ -1,16 +1,17 @@
 
-.InputContainer {
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgb(255, 255, 255);
-  border-radius: 10px;
-  overflow: hidden;
-  cursor: pointer;
-  padding-left: 15px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
+
+.suggestions-list {
+  position: absolute;
+  top: 100%; /* Position directly below the input */
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto; /* Make it scrollable */
+  z-index: 10; /* Ensure suggestions appear above other content */
 }
+
+
 
 .input {
   height: 100%;

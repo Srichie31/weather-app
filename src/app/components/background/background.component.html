@@ -1,10 +1,10 @@
 <div id="background-wrap" [style.background]="bgColor">
-  <div *ngIf="!isDarkTheme" @fadeInOut>
+  <div *ngIf="!isDarkTheme" class="d-none d-md-block d-lg-block" @fadeInOut>
     <span class="sun-rays"></span>
     <span class="sun"></span>
   </div>
 
-  <div *ngIf="isDarkTheme" @fadeInOut>
+  <div *ngIf="isDarkTheme" class="d-none d-md-block d-lg-block" @fadeInOut>
     <span class="moon"></span>
     <span class="moon-rays"></span>
   </div>

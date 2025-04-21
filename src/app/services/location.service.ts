@@ -5,10 +5,12 @@ import { Observable } from 'rxjs';
 import { WeatherAPIResponse } from '../services/weather-property.model';
 
 
+
 @Injectable({
   providedIn: 'root',
 })
 export class LocationService {
+
   private apiKey = environment.openWeatherKey;
   private baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
 
@@ -24,8 +26,9 @@ export class LocationService {
     return this.http.get<WeatherAPIResponse>(url);
   }
 
-  searchCities(query: string): Observable<any> {
+  searchPlaces(query: string) {
     const url = `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${this.apiKey}`;
-    return this.http.get(url);
+    return this.http.get<any[]>(url);
   }
+
 }
