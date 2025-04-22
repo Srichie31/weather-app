@@ -31,16 +31,19 @@ export class BackgroundComponent implements OnInit {
   constructor(public service:BgService){
     
   }
-  bgColor = 'white'
+  bgColor:any
   numberSubscription !:Subscription
   themeSubscription !:Subscription
   isDarkTheme = false;
   
   ngOnInit(): void {
     this.numberSubscription= this.service.number$.subscribe(num => {
+    
       this.bgColor = this.service.getBackGroundColor(num);
+
     });
     this.themeSubscription = this.service.theme$.subscribe(theme => {
+      console.log(this.isDarkTheme);
       this.isDarkTheme = theme === 'dark';
       
     });

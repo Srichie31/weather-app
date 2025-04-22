@@ -1,4 +1,4 @@
-<div id="background-wrap" [style.background]="bgColor">
+<div id="background-wrap" [ngStyle]="{background: bgColor ? bgColor : '#fff'}">
   <div *ngIf="!isDarkTheme" class="d-none d-md-block d-lg-block" @fadeInOut>
     <span class="sun-rays"></span>
     <span class="sun"></span>

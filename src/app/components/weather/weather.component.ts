@@ -18,11 +18,12 @@ import {
   faMountain,
   faWind,
   faAngleDoubleUp,
-  faLocationArrow
+  faLocationArrow,
+  faLocation
 } from '@fortawesome/free-solid-svg-icons';
 // import { WeatherAPIResponse } from '../../services/weather-property.model';
 // import { map } from '@tomtom-international/web-sdk-maps';
-import { faEllipsisH, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisH, faEllipsisV,faSearch } from '@fortawesome/free-solid-svg-icons';
 import { of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 declare const bootstrap: any;
@@ -41,6 +42,8 @@ declare const bootstrap: any;
 export class WeatherComponent implements OnInit {
   ellipsisH = faEllipsisH;
   ellipsisV = faEllipsisV;
+  searchIcon = faSearch
+  locationIcon = faLocation
   weatherProperties: any[] = [];
   city = '';
   weatherData: any;
@@ -71,18 +74,6 @@ export class WeatherComponent implements OnInit {
   suggestions: any[] = [];
   selectedPlace: any = null;
   @ViewChild('searchBox') searchBox!: ElementRef;
-
-  hourlyData = [
-    { time: '12:00', icon: 'wi wi-day-sunny', temp: 28 },
-    { time: '13:00', icon: 'wi wi-day-cloudy', temp: 29 },
-    { time: '14:00', icon: 'wi wi-cloud', temp: 27 },
-    { time: '15:00', icon: 'wi wi-rain', temp: 25 },
-    { time: '16:00', icon: 'wi wi-thunderstorm', temp: 24 },
-    { time: '17:00', icon: 'wi wi-night-clear', temp: 22 },
-  ];
-
-
-
   private searchSubject = new Subject<string>();
   constructor(
     private bgService: BgService,
@@ -162,7 +153,7 @@ export class WeatherComponent implements OnInit {
   selectPlace(place: any) {
     this.selectedPlace = place;
     this.city = `${place.name}, ${place.country}`; // Update the city with selected place
-    this.suggestions = []; // Clear suggestions after selecting a place
+    this.suggestions = []; 
     this.searchByCity()
   }
 
@@ -170,6 +161,7 @@ export class WeatherComponent implements OnInit {
     if (this.city.trim()) {
       this.weatherService.getWeatherByCity(this.city).subscribe(
         (data) => {
+          this.suggestions = []
           this.weatherData = data;
           this.mapData(data)
           this.offset = this.weatherData.timezone;
@@ -189,6 +181,8 @@ export class WeatherComponent implements OnInit {
   searchByPosition(lat: any, lon: any) {
     this.weatherService.getWeatherByCoords(lat, lon).subscribe(
       (data) => {
+        this.suggestions = []
+
         this.weatherData = data;
         this.mapData(data)
         this.offset = this.weatherData.timezone;
@@ -214,7 +208,7 @@ export class WeatherComponent implements OnInit {
           this.searchByPosition(lat, lon);
         },
         (error) => {
-          this.weatherData = null;
+          this.showToast(this.message)
           this.locationError = 'Location access denied or unavailable.';
           console.error('Geolocation error:', error);
         }
@@ -242,6 +236,7 @@ export class WeatherComponent implements OnInit {
     const curOffset = new Date().getTimezoneOffset() * 60000;
     const utc = new Date().getTime() + curOffset;
     const localTime = new Date(utc + this.offset * 1000);
+    
     this.bgService.setBackGround(localTime.getHours());
     this.hour = localTime.getHours()
     // this.remoteTime.sunrise = this.formatUnixTime(this.weatherData.sys.sunrise, this.weatherData.timezone);

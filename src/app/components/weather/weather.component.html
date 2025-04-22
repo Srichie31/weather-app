@@ -1,7 +1,44 @@
+<div class="d-flex" style="z-index: 1000; position: absolute;  width: 100%; bottom: 0;" *ngIf="!weatherData">
+  <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+
+    <path fill="#273036" fill-opacity="1" d="M0,224L48,197.3C96,171,192,117,288,122.7C384,128,480,192,576,181.3C672,171,768,85,864,74.7C960,64,1056,128,1152,181.3C1248,235,1344,277,1392,298.7L1440,320L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+      
+    </path>
+  </svg> -->
+  <img src="../../../assets/images/back-mountain.png" class="img-fluid w-100" alt="">
+</div>
+<div class="d-flex w-100 p-4 justify-content-between position-absolute top-0 text-light" style="z-index: 10000;" *ngIf="!weatherData">
+  <div class="logo">
+    <h5>Mm.</h5>
+  </div>
+  <div class="options"><label class="switch">
+      <input type="checkbox" />
+      <span class="wrapper">
+        <span class="row-h">
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </span>
+        <span class="row-h row-bottom">
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </span>
+        <span class="row-vertical">
+          <span class="dot"></span>
+          <span class="dot middle-dot"></span>
+          <span class="dot"></span>
+        </span>
+        <span class="row-horizontal">
+          <span class="dot"></span>
+          <span class="dot middle-dot-horizontal"></span>
+          <span class="dot"></span>
+        </span>
+      </span>
+    </label></div>
+</div>
 <div class="container-fluid  d-flex flex-column flex-md-row justify-content-center px-0 align-items-start"
   style="height: 100vh; overflow-y: auto">
 
-  <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+  <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 10000;">
     <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
 
       <div class="d-flex">
@@ -22,15 +59,25 @@
     <div
       class="col-12  p-3 d-flex flex-column weather-db min-vh-100 border-bottom border-md-end border-white border-opacity-10 left-panel"
       [ngClass]="weatherData? 'col-md-4 ':'col-md-12 justify-content-center'">
+
       <!-- Search Bar -->
-      <div class="d-flex search-bar align-items-center w-100" style="position: relative;">
+       <div class="text-center">
+        
+       </div>
+      <div class="d-flex flex-column align-items-center justify-content-center mb-2 " *ngIf="!weatherData">
+        <div class="d-flex flex-column justify-content-end align-items-end title">
+          <h1 class="display-2 fw-medium pb-0 mb-4 ">Megha Mitra.</h1>
+
+        </div>
+
+      </div>
+      <div class="d-flex search-bar justify-content-center align-items-center w-100" style="position: relative;">
+
         <!-- Search Input -->
-        <div class="input-container h-100" style="width: 100%; position: relative;">
-          <!-- Search Input -->
+        <div class="input-container h-100   " [ngStyle]="{'width' : weatherData ? '100%':'40%'}"
+          style=" position: relative;">
           <input type="text" [(ngModel)]="city" class="form-control text-dark" placeholder="Search for a city"
             autocomplete="off" (keyup.enter)="searchByCity()" (input)="onSearchChange()" />
-
-          <!-- Suggestions List (hidden by default) -->
           <ul *ngIf="suggestions.length" class="list-group suggestions-list">
             <li *ngFor="let place of suggestions" class="list-group-item" (click)="selectPlace(place)">
               <i class="fas fa-search me-2"></i> {{ place.name }}, {{ place.country }}
@@ -39,11 +86,13 @@
         </div>
 
         <button class="btn btn-light ms-2" (click)="searchByCity()" style="width: 40px; height: 40px;">
-          <i class="fas fa-search"></i>
+          <fa-icon [icon]="searchIcon"></fa-icon>
         </button>
 
         <button class="btn btn-light ms-2" (click)="useMyLocation()" style="width: 40px; height: 40px;">
-          <i class="fas fa-location"></i>
+
+          <fa-icon [icon]="locationIcon"></fa-icon>
+
         </button>
 
 
@@ -93,11 +142,11 @@
       <!-- Weather Info -->
       <div class="mt-3">
         <div class="container-fluid px-0" *ngIf="weatherData">
-          <div class="row g-3">
+          <div class="row g-3 ">
             <div class="col-md-4 col-6" *ngFor="let item of weatherProperties | keyvalue">
-              <div class=" text-dark rounded-4 h-100 p-3" style="background: #acb6e5;  /* fallback for old browsers */
-              background: -webkit-linear-gradient(to right, #86fde8, #acb6e5);  /* Chrome 10-25, Safari 5.1-6 */
-              background: linear-gradient(to right, #86fde8, #acb6e5);box-shadow: 0px 8px 16px 0px rgb(0 0 0 / 3%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+              <div class=" text-dark rounded-4 h-100 p-3" style="background: #acb6e5;  
+              background: -webkit-linear-gradient(to right, #86fde8, #acb6e5);  
+              background: linear-gradient(to right, #86fde8, #acb6e5);box-shadow: 0px 8px 16px 0px rgb(0 0 0 / 3%); 
               ">
                 <div class="d-flex justify-content-between align-items-start">
                   <h5><fa-icon [icon]="item.value.icon"></fa-icon></h5>

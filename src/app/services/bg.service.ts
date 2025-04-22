@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class BgService {
-  private numberSource = new BehaviorSubject<number>(0);
+  private numberSource = new BehaviorSubject<number>(13);
   number$ = this.numberSource.asObservable();
 
   private themeSubject = new BehaviorSubject<'light' | 'dark'>('light');
@@ -14,6 +14,7 @@ export class BgService {
   constructor() {}
 
   setBackGround(num:number){
+    
     this.numberSource.next(num);
   }
 
@@ -28,7 +29,9 @@ export class BgService {
     return this.themeSubject.value;
   }
 
-  getBackGroundColor(index: any): string {    
+  getBackGroundColor(index: any): string { 
+    console.log(index);
+       
     switch (index) {
       case 0:
         return '#00000c';
