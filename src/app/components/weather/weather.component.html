@@ -36,7 +36,7 @@
     </label></div>
 </div>
 <div class="container-fluid  d-flex flex-column flex-md-row justify-content-center px-0 align-items-start"
-  style="height: 100vh; overflow-y: auto">
+  style="height: 100dvh; overflow-y: auto">
 
   <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 10000;">
     <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -54,10 +54,10 @@
     </div>
   </div>
 
-  <div class="row  w-100 mx-0 flex-grow-1 flex-column flex-md-row min-vh-100">
+  <div class="row  w-100 mx-0 flex-grow-1 flex-column flex-md-row " style="min-height: 100dvh;">
     <!-- Left Panel -->
     <div
-      class="col-12  p-3 d-flex flex-column weather-db min-vh-100 border-bottom border-md-end border-white border-opacity-10 left-panel"
+      class="col-12  p-3 d-flex flex-column weather-db  border-bottom border-md-end border-white border-opacity-10 left-panel"
       [ngClass]="weatherData? 'col-md-4 ':'col-md-12 justify-content-center'">
 
       <!-- Search Bar -->
